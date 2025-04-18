@@ -1,13 +1,13 @@
 [
     {
-        "question": "What is Espresso Network primarily focused on?",
-        "options": ["DeFi lending", "Privacy scaling", "Gaming", "NFTs"],
-        "correctAnswer": 1
+        "question": "The Upcoming NFT collection of Espresso will be launched on -",
+        "options": ["Espresso Mainnet", "Ethereum Mainnet", "zKSync Network", "Rari Mainnet"],
+        "correctAnswer": 3
     },
     {
-        "question": "Which consensus mechanism does Espresso Network utilize?",
-        "options": ["Proof of Work", "Proof of Stake", "Proof of Authority", "HotShot Consensus"],
-        "correctAnswer": 3
+        "question": "What is the name of the upcoming NFT of Espresso Network?",
+        "options": ["The Espresso", "The Composables", "Warriors of Espresso", "None of these"],
+        "correctAnswer": 1
     },
     {
         "question": "What is the name of Espresso Network’s custom consensus protocol?",
@@ -60,9 +60,9 @@
         "correctAnswer": 3
     },
     {
-        "question": "What does decentralizing sequencers help improve?",
-        "options": ["User experience", "Network security", "Protocol censorship resistance", "All of the above"],
-        "correctAnswer": 3
+        "question": "How much total funding has Espresso Network raised so far?",
+        "options": ["$30M", "$45M", "$60M", "$120M"],
+        "correctAnswer": 2
     },
     {
         "question": "What is one reason rollups use centralized sequencers?",
