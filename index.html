@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espresso Knowledge Quiz</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.2/web3.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6f4e37;
+            --secondary: #a67c52;
+            --light: #fff8f0;
+            --dark: #2c1e12;
+            --accent: #d4a373;
+            --success: #28a745;
+            --danger: #dc3545;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Lexend', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background-color: var(--primary);
+            color: var(--light);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(111, 78, 55, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(255,255,255,0.1), transparent 70%);
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            opacity: 0.7;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        h2 {
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: var(--light);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn i {
+            font-size: 18px;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:disabled {
+            background-color: #bbb;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-secondary {
+            background-color: var(--accent);
+            color: var(--dark);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #c19365;
+        }
+        
+        #walletSection, #quizIntro, #quizSection, #resultsSection {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        #quizSection, #resultsSection {
+            display: none;
+        }
+        
+        .question-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .question-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at bottom right, rgba(212, 163, 115, 0.1), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .question-text {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        
+        .options {
+            list-style-type: none;
+        }
+        
+        .option {
+            background-color: #f7f7f7;
+            margin: 12px 0;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            border: 1px solid transparent;
+        }
+        
+        .option::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+            margin-right: 12px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        
+        .option:hover {
+            background-color: #f0f0f0;
+            border-color: #ddd;
+        }
+        
+        .option.selected {
+            background-color: var(--accent);
+            color: var(--dark);
+            font-weight: 500;
+            border-color: var(--accent);
+        }
+        
+        .option.selected::before {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            box-shadow: inset 0 0 0 4px var(--accent);
+        }
+        
+        .option.correct {
+            background-color: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+        
+        .option.wrong {
+            background-color: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        
+        .question-number {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .progress-info {
+            position: absolute;
+            top: -25px;
+            right: 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .result-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+        
+        .result-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .score {
+            font-size: 56px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 30px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .score::after {
+            content: '';
+            position: absolute;
+            font-size: 24px;
+            top: 0;
+            right: -30px;
+            opacity: 0.7;
+        }
+        
+        .badge {
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .badge img {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            border-radius: 50%;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border: 6px solid var(--light);
+            background: radial-gradient(circle at center, #fff, var(--light));
+            transition: transform 0.3s ease;
+        }
+        
+        .badge img:hover {
+            transform: scale(1.05);
+        }
+        
+        .badge-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 20px 0 10px;
+            color: var(--secondary);
+        }
+        
+        .mint-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 20px 0;
+                margin-bottom: 30px;
+            }
+            
+            .question-text {
+                font-size: 18px;
+            }
+            
+            .option {
+                padding: 12px;
+            }
+            
+            .btn {
+                padding: 12px 24px;
+                font-size: 15px;
+                width: 100%;
+                margin: 8px 0;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .navigation .btn {
+                width: 100%;
+            }
+            
+            .result-title {
+                font-size: 22px;
+            }
+            
+            .score {
+                font-size: 46px;
+            }
+            
+            .badge img {
+                width: 130px;
+                height: 130px;
+            }
+            
+            .badge-title {
+                font-size: 20px;
+            }
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .loader {
+            border: 5px solid rgba(255, 248, 240, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid var(--primary);
+            width: 34px;
+            height: 34px;
+            animation: spin 1s linear infinite;
+            margin: 15px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .tier-list {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .tier-list h3 {
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .tier-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tier-item:last-child {
+            border-bottom: none;
+        }
+        
+        .tier-item span:first-child {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tier-item span:last-child {
+            color: #555;
+        }
+        
+        #walletAddress {
+            font-size: 15px;
+            word-break: break-all;
+            margin-top: 15px;
+            padding: 12px;
+            background-color: rgba(0,0,0,0.03);
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .wallet-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-dot.connected {
+            background-color: #4CAF50;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+        }
+        
+        .status-dot.disconnected {
+            background-color: #F44336;
+            box-shadow: 0 0 8px rgba(244, 67, 54, 0.5);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .modal-content {
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .modal-btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+        
+        .modal-btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .modal-btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        #timerDisplay {
+            font-weight: 500;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Espresso Knowledge Quiz</h1>
+            <p>Test your knowledge about Espresso Network and earn NFT badges</p>
+        </header>
+        
+        <section id="walletSection">
+            <h2>Connect Your Wallet</h2>
+            <p>Connecting your wallet is optional but required for minting NFTs.</p>
+            <div id="walletStatus" class="wallet-status">
+                <span class="status-dot disconnected"></span>
+                <span>Not Connected</span>
+            </div>
+            <div id="walletAddress" class="hidden"></div>
+            <button id="connectWalletBtn" class="btn"><i class="fas fa-wallet"></i> Connect Wallet</button>
+            <button id="startWithoutWalletBtn" class="btn btn-secondary"><i class="fas fa-arrow-right"></i> Continue Without Wallet</button>
+        </section>
+        
+        <section id="quizIntro" class="hidden">
+            <h2>How It Works</h2>
+            <p>Answer 10 questions about Espresso Network. The more you get correct, the better NFT tier you'll unlock!</p>
+            
+            <div class="tier-list">
+                <h3><i class="fas fa-trophy"></i> NFT Reward Tiers</h3>
+                <div class="tier-item">
+                    <span><i class="fas fa-seedling"></i> Espresso Novice</span>
+                    <span>5 correct answers</span>
+                </div>
+                <div class="tier-item">
+                    <span><i class="fas fa-mug-hot"></i> Espresso Adept</span>
+                    <span>6 correct answers</span>
+                </div>
+                <div class="tier-item">
+                    <span><i class="fas fa-certificate"></i> Espresso Specialist</span>
+                    <span>7 correct answers</span>
+                </div>
+                <div class="tier-item">
+                    <span><i class="fas fa-star"></i> Espresso Expert</span>
+                    <span>8 correct answers</span>
+                </div>
+                <div class="tier-item">
+                    <span><i class="fas fa-crown"></i> Espresso Master</span>
+                    <span>9 correct answers</span>
+                </div>
+                <div class="tier-item">
+                    <span><i class="fas fa-chess-king"></i> Espresso Grandmaster</span>
+                    <span>10 correct answers</span>
+                </div>
+            </div>
+            
+            <button id="startQuizBtn" class="btn"><i class="fas fa-play"></i> Start Quiz</button>
+        </section>
+        
+        <section id="quizSection">
+            <div class="progress-container">
+                <div class="progress-info">Question <span id="currentQuestionNum">1</span>/<span id="totalQuestions">10</span></div>
+                <div class="progress-bar">
+                    <div id="progressBar" class="progress" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div id="questionContainer" class="question-card">
+                <div class="question-number">
+                    <span><i class="fas fa-coffee"></i> Espresso Quiz</span>
+                    <span id="timerDisplay"></span>
+                </div>
+                <div id="questionText" class="question-text"></div>
+                <ul id="options" class="options"></ul>
+            </div>
+            
+            <div class="navigation">
+                <button id="prevBtn" class="btn btn-secondary" disabled><i class="fas fa-arrow-left"></i> Previous</button>
+                <button id="nextBtn" class="btn">Next <i class="fas fa-arrow-right"></i></button>
+                <button id="submitBtn" class="btn" style="display: none;"><i class="fas fa-check-circle"></i> Submit Quiz</button>
+            </div>
+        </section>
+        
+        <section id="resultsSection">
+            <div class="result-card">
+                <h2 class="result-title"><i class="fas fa-award"></i> Quiz Results</h2>
+                <p>You answered <span id="correctAnswers">0</span> out of <span id="totalAnswersCount">10</span> questions correctly!</p>
+                
+                <div class="score"><span id="scoreValue">0</span>/10</div>
+                
+                <div id="badgeContainer" class="badge">
+                    <img id="badgeImage" src="nobadge.png" alt="Badge placeholder" class="hidden">
+                    <div id="badgeTitle" class="badge-title">No Badge Earned</div>
+                    <p id="badgeDescription">You need at least 5 correct answers to earn a badge.</p>
+                </div>
+                
+                <div id="connectWalletForNFT" class="hidden">
+                    <p>Connect your wallet to mint your NFT badge!</p>
+                    <button id="connectWalletLaterBtn" class="btn"><i class="fas fa-wallet"></i> Connect Wallet</button>
+                </div>
+                
+                <div id="mintSection" class="mint-section hidden">
+                    <h3><i class="fas fa-medal"></i> Mint Your NFT Badge</h3>
+                    <p id="badgeEarnedMessage" class="hidden">You've earned the <span id="nftTierName">Espresso Novice</span> badge!</p>
+                    <div id="mintLoader" class="loader hidden"></div>
+                    <button id="mintNFTBtn" class="btn"><i class="fas fa-coins"></i> Mint NFT Badge</button>
+                    <p id="mintStatus" class="hidden"></p>
+                </div>
+                
+                <button id="tryAgainBtn" class="btn btn-secondary"><i class="fas fa-redo"></i> Try Again</button>
+            </div>
+        </section>
+    </div>
+    
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-title"><i class="fas fa-exclamation-circle"></i> Incomplete Quiz</div>
+            <div class="modal-content">
+                You haven't answered all questions. Do you want to submit anyway?
+            </div>
+            <div class="modal-buttons">
+                <button id="cancelSubmit" class="modal-btn modal-btn-secondary">Cancel</button>
+                <button id="confirmSubmit" class="modal-btn modal-btn-primary">Submit Anyway</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    let quizData = [];
+    let selectedQuestions = [];
+    let userAnswers = [];
+    let currentQuestion = 0;
+    let walletConnected = false;
+    let walletAddress = null;
+    let web3Instance = null;
+    let contract = null;
+    let nftMinted = false;
+    let timer;
+    let timeLeft = 30;
+    let walletSkipped = false;
+    let questionAnswered = false;
+    
+    const contractAddress = "0xA7B095C28c3dEC20b6E75fB4331C72e8139AC99C";
+    
+    const contractABI = [
+        {
+            "inputs": [
+                {"internalType": "address", "name": "to", "type": "address"},
+                {"internalType": "string", "name": "tier", "type": "string"}
+            ],
+            "name": "mintBadge",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {"internalType": "uint256", "name": "tokenId", "type": "uint256"}
+            ],
+            "name": "getBadgeTier",
+            "outputs": [
+                {"internalType": "string", "name": "", "type": "string"}
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ];
+    
+    const walletSection = document.getElementById('walletSection');
+    const quizIntro = document.getElementById('quizIntro');
+    const quizSection = document.getElementById('quizSection');
+    const resultsSection = document.getElementById('resultsSection');
+    
+    const connectWalletBtn = document.getElementById('connectWalletBtn');
+    const startWithoutWalletBtn = document.getElementById('startWithoutWalletBtn');
+    const startQuizBtn = document.getElementById('startQuizBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const tryAgainBtn = document.getElementById('tryAgainBtn');
+    const connectWalletLaterBtn = document.getElementById('connectWalletLaterBtn');
+    const mintNFTBtn = document.getElementById('mintNFTBtn');
+    
+    const questionText = document.getElementById('questionText');
+    const optionsList = document.getElementById('options');
+    const progressBar = document.getElementById('progressBar');
+    const currentQuestionNum = document.getElementById('currentQuestionNum');
+    const totalQuestions = document.getElementById('totalQuestions');
+    const correctAnswers = document.getElementById('correctAnswers');
+    const totalAnswersCount = document.getElementById('totalAnswersCount');
+    const scoreValue = document.getElementById('scoreValue');
+    const badgeImage = document.getElementById('badgeImage');
+    const badgeTitle = document.getElementById('badgeTitle');
+    const badgeDescription = document.getElementById('badgeDescription');
+    const walletStatusDisplay = document.getElementById('walletStatus');
+    const walletAddressDisplay = document.getElementById('walletAddress');
+    const connectWalletForNFT = document.getElementById('connectWalletForNFT');
+    const mintSection = document.getElementById('mintSection');
+    const nftTierName = document.getElementById('nftTierName');
+    const mintLoader = document.getElementById('mintLoader');
+    const mintStatus = document.getElementById('mintStatus');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const badgeEarnedMessage = document.getElementById('badgeEarnedMessage');
+    
+    const confirmModal = document.getElementById('confirmModal');
+    const cancelSubmit = document.getElementById('cancelSubmit');
+    const confirmSubmit = document.getElementById('confirmSubmit');
+    
+    const badges = [
+        { min: 0, max: 4, title: "No Badge", description: "You need at least 5 correct answers to earn a badge." },
+        { min: 5, max: 5, title: "Espresso Novice", description: "You're just starting to explore the Espresso Network." },
+        { min: 6, max: 6, title: "Espresso Adept", description: "You've grasped the basics of the Espresso Network." },
+        { min: 7, max: 7, title: "Espresso Specialist", description: "You understand Espresso's tech and its role in Web3." },
+        { min: 8, max: 8, title: "Espresso Expert", description: "You're well-versed in rollups, sequencers and HotShot." },
+        { min: 9, max: 9, title: "Espresso Master", description: "You've mastered Espresso's mission, design and tools." },
+        { min: 10, max: 10, title: "Espresso Grandmaster", description: "You're a top-tier expert on Espresso Network." }
+    ];
+    
+    const badgeImages = {
+        "Espresso Novice": "novice.png",
+        "Espresso Adept": "adept.png",
+        "Espresso Specialist": "specialist.png",
+        "Espresso Expert": "expert.png",
+        "Espresso Master": "master.png",
+        "Espresso Grandmaster": "grandmaster.png"
+    };
+    
+    async function fetchQuizData() {
+        try {
+            const response = await fetch('questions.json');
+            if (!response.ok) {
+                throw new Error('Failed to load quiz data');
+            }
+            const allQuestions = await response.json();
+            selectedQuestions = shuffleArray(allQuestions).slice(0, 10);
+            userAnswers = new Array(selectedQuestions.length).fill(null);
+            totalQuestions.textContent = selectedQuestions.length;
+            totalAnswersCount.textContent = selectedQuestions.length;
+            loadQuestion(0);
+        } catch (error) {
+            console.error('Error fetching quiz data:', error);
+            alert('Failed to load quiz data. Please try again later.');
+        }
+    }
+    
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+    
+    function initQuiz() {
+        fetchQuizData();
+        nftMinted = false;
+        mintStatus.classList.add('hidden');
+        mintNFTBtn.classList.remove('hidden');
+        badgeEarnedMessage.classList.add('hidden');
+    }
+    
+    function loadQuestion(index) {
+        if (index < 0 || index >= selectedQuestions.length) return;
+    
+        currentQuestion = index;
+        const question = selectedQuestions[index];
+        questionAnswered = userAnswers[index] !== null;
+    
+        questionText.textContent = question.question;
+        optionsList.innerHTML = '';
+    
+        question.options.forEach((option, i) => {
+            const li = document.createElement('li');
+            li.className = 'option';
+            if (userAnswers[index] === i) {
+                li.classList.add('selected');
+            }
+            li.textContent = option;
+            
+            if (questionAnswered) {
+                if (i === userAnswers[index]) {
+                    li.classList.add(i === question.correctAnswer ? 'correct' : 'wrong');
+                }
+                if (i === question.correctAnswer && userAnswers[index] !== question.correctAnswer) {
+                    li.classList.add('correct');
+                }
+                li.style.cursor = 'not-allowed';
+            } else {
+                li.addEventListener('click', () => selectOption(i));
+            }
+            
+            optionsList.appendChild(li);
+        });
+    
+        currentQuestionNum.textContent = index + 1;
+        progressBar.style.width = `${((index + 1) / selectedQuestions.length) * 100}%`;
+    
+        prevBtn.disabled = index === 0;
+        nextBtn.style.display = index === selectedQuestions.length - 1 ? 'none' : 'inline-block';
+        submitBtn.style.display = index === selectedQuestions.length - 1 ? 'inline-block' : 'none';
+    
+        if (!questionAnswered) {
+            startTimer();
+        } else {
+            clearInterval(timer);
+            timerDisplay.textContent = 'Question answered';
+        }
+    }
+    
+    function startTimer() {
+        clearInterval(timer);
+        timeLeft = 30;
+        timerDisplay.textContent = `Time left: ${timeLeft}s`;
+        timer = setInterval(() => {
+            timeLeft--;
+            timerDisplay.textContent = `Time left: ${timeLeft}s`;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                if (currentQuestion < selectedQuestions.length - 1) {
+                    loadQuestion(currentQuestion + 1);
+                } else {
+                    showResults();
+                }
+            }
+        }, 1000);
+    }
+    
+    function selectOption(optionIndex) {
+        if (questionAnswered) return;
+        
+        userAnswers[currentQuestion] = optionIndex;
+        questionAnswered = true;
+    
+        const options = optionsList.querySelectorAll('.option');
+        options.forEach((option, i) => {
+            option.classList.remove('selected');
+            option.style.cursor = 'not-allowed';
+            
+            if (i === optionIndex) {
+                option.classList.add('selected');
+                if (i === selectedQuestions[currentQuestion].correctAnswer) {
+                    option.classList.add('correct');
+                } else {
+                    option.classList.add('wrong');
+                }
+            }
+            
+            if (i === selectedQuestions[currentQuestion].correctAnswer && i !== optionIndex) {
+                option.classList.add('correct');
+            }
+            
+            option.replaceWith(option.cloneNode(true));
+        });
+    
+        clearInterval(timer);
+        timerDisplay.textContent = 'Question answered';
+    }
+    
+    function calculateScore() {
+        let score = 0;
+        for (let i = 0; i < selectedQuestions.length; i++) {
+            if (userAnswers[i] === selectedQuestions[i].correctAnswer) {
+                score++;
+            }
+        }
+        return score;
+    }
+    
+    function showResults() {
+        clearInterval(timer);
+        const score = calculateScore();
+    
+        correctAnswers.textContent = score;
+        scoreValue.textContent = score;
+    
+        const badge = badges.find(b => score >= b.min && score <= b.max);
+    
+        badgeTitle.textContent = badge.title;
+        badgeDescription.textContent = badge.description;
+    
+        if (score < 5) {
+            badgeImage.src = "nobadge.png";
+            badgeImage.classList.remove('hidden');
+            connectWalletForNFT.classList.add('hidden');
+            mintSection.classList.add('hidden');
+        } else {
+            if (walletConnected) {
+                mintSection.classList.remove('hidden');
+                connectWalletForNFT.classList.add('hidden');
+                if (nftMinted) {
+                    badgeImage.src = badgeImages[badge.title];
+                    badgeImage.classList.remove('hidden');
+                    mintNFTBtn.classList.add('hidden');
+                    mintLoader.classList.add('hidden');
+                    document.querySelector('.mint-section h3').classList.add('hidden');
+                    nftTierName.parentElement.classList.add('hidden');
+                    mintStatus.textContent = 'NFT minted successfully!';
+                    mintStatus.classList.remove('hidden');
+                } else {
+                    document.querySelector('.mint-section h3').classList.remove('hidden');
+                    nftTierName.parentElement.classList.remove('hidden');
+                    badgeImage.classList.add('hidden');
+                    mintNFTBtn.classList.remove('hidden');
+                    mintLoader.classList.add('hidden');
+                    mintStatus.classList.add('hidden');
+                    nftTierName.textContent = badge.title;
+                }
+            } else {
+                badgeImage.src = badgeImages[badge.title];
+                badgeImage.classList.remove('hidden');
+                if (!walletSkipped) {
+                    connectWalletForNFT.classList.remove('hidden');
+                } else {
+                    connectWalletForNFT.classList.add('hidden');
+                }
+                mintSection.classList.add('hidden');
+            }
+        }
+    
+        quizSection.style.display = 'none';
+        resultsSection.style.display = 'block';
+    }
+    
+    async function connectWallet() {
+        if (window.ethereum) {
+            try {
+                const RARI_CHAIN_ID = 1380012617;
+                const currentChainIdHex = await window.ethereum.request({ method: 'eth_chainId' });
+                const currentChainId = parseInt(currentChainIdHex, 16);
+                
+                if (currentChainId !== RARI_CHAIN_ID) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: '0x' + RARI_CHAIN_ID.toString(16) }],
+                        });
+                    } catch (switchError) {
+                        if (switchError.code === 4902) {
+                            try {
+                                await window.ethereum.request({
+                                    method: 'wallet_addEthereumChain',
+                                    params: [
+                                        {
+                                            chainId: '0x' + RARI_CHAIN_ID.toString(16),
+                                            chainName: 'RARI Mainnet',
+                                            nativeCurrency: {
+                                                name: 'ETH',
+                                                symbol: 'ETH',
+                                                decimals: 18
+                                            },
+                                            rpcUrls: ['https://mainnet.rpc.rarichain.org/http'],
+                                            blockExplorerUrls: ['https://mainnet.explorer.rarichain.org']
+                                        }
+                                    ],
+                                });
+                                
+                                await window.ethereum.request({
+                                    method: 'wallet_switchEthereumChain',
+                                    params: [{ chainId: '0x' + RARI_CHAIN_ID.toString(16) }],
+                                });
+                            } catch (addError) {
+                                console.error("Failed to add RARI network:", addError);
+                                alert("Failed to add RARI network to your wallet. Please add it manually and try again.");
+                                return false;
+                            }
+                        } else {
+                            console.error("Failed to switch to RARI network:", switchError);
+                            alert("Failed to switch to RARI network. Please switch manually and try again.");
+                            return false;
+                        }
+                    }
+                }
+    
+                web3Instance = new Web3(window.ethereum);
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                walletAddress = accounts[0];
+                walletConnected = true;
+    
+                contract = new web3Instance.eth.Contract(contractABI, contractAddress);
+    
+                updateWalletUI();
+    
+                return true;
+            } catch (error) {
+                console.error("Error connecting wallet:", error);
+                alert("Failed to connect wallet: " + error.message);
+                return false;
+            }
+        } else {
+            alert("Please install MetaMask or another Web3 wallet to connect.");
+            return false;
+        }
+    }
+    
+    function updateWalletUI() {
+        if (walletConnected) {
+            const statusDot = walletStatusDisplay.querySelector('.status-dot');
+            statusDot.classList.remove('disconnected');
+            statusDot.classList.add('connected');
+            walletStatusDisplay.querySelector('span:last-child').textContent = 'Connected to RARI Mainnet';
+    
+            walletAddressDisplay.textContent = `${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}`;
+            walletAddressDisplay.classList.remove('hidden');
+    
+            connectWalletBtn.textContent = 'Wallet Connected';
+            connectWalletBtn.disabled = true;
+        }
+    }
+    
+    function setupNetworkChangeListener() {
+        if (window.ethereum) {
+            window.ethereum.on('chainChanged', async (chainIdHex) => {
+                const RARI_CHAIN_ID = 1380012617;
+                const chainId = parseInt(chainIdHex, 16);
+                
+                if (chainId !== RARI_CHAIN_ID && walletConnected) {
+                    const statusDot = walletStatusDisplay.querySelector('.status-dot');
+                    statusDot.classList.remove('connected');
+                    statusDot.classList.add('disconnected');
+                    walletStatusDisplay.querySelector('span:last-child').textContent = 'Wrong Network - Switch to RARI Mainnet';
+                    
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: '0x' + RARI_CHAIN_ID.toString(16) }],
+                        });
+                    } catch (error) {
+                        console.error("Failed to switch back to RARI network:", error);
+                    }
+                }
+            });
+            
+            window.ethereum.on('accountsChanged', (accounts) => {
+                if (accounts.length === 0) {
+                    walletConnected = false;
+                    walletAddress = null;
+                    
+                    const statusDot = walletStatusDisplay.querySelector('.status-dot');
+                    statusDot.classList.remove('connected');
+                    statusDot.classList.add('disconnected');
+                    walletStatusDisplay.querySelector('span:last-child').textContent = 'Not Connected';
+                    
+                    walletAddressDisplay.classList.add('hidden');
+                    connectWalletBtn.textContent = 'Connect Wallet';
+                    connectWalletBtn.disabled = false;
+                } else {
+                    walletAddress = accounts[0];
+                    walletAddressDisplay.textContent = `${walletAddress.substring(0, 6)}...${walletAddress.substring(walletAddress.length - 4)}`;
+                }
+            });
+        }
+    }
+    
+    async function mintNFT() {
+        if (!walletConnected || !contract) {
+            alert("Please connect your wallet first.");
+            return;
+        }
+    
+        const RARI_CHAIN_ID = 1380012617;
+        const currentChainIdHex = await window.ethereum.request({ method: 'eth_chainId' });
+        const currentChainId = parseInt(currentChainIdHex, 16);
+        
+        if (currentChainId !== RARI_CHAIN_ID) {
+            alert("Please switch to RARI Mainnet to mint your NFT.");
+            return;
+        }
+    
+        const score = calculateScore();
+        if (score < 5) {
+            alert("You need at least 5 correct answers to mint a NFT!");
+            return;
+        }
+    
+        const badge = badges.find(b => score >= b.min && score <= b.max);
+        const tier = badge.title;
+    
+        try {
+            mintLoader.classList.remove('hidden');
+            mintNFTBtn.disabled = true;
+            mintStatus.textContent = "Transaction in progress...";
+            mintStatus.classList.remove('hidden');
+    
+            const tx = await contract.methods.mintBadge(walletAddress, tier).send({
+                from: walletAddress
+            });
+    
+            const txHash = tx.transactionHash;
+            const explorerUrl = `https://mainnet.explorer.rarichain.org/tx/${txHash}`;
+            
+            nftMinted = true;
+            badgeImage.src = badgeImages[tier];
+            badgeImage.classList.remove('hidden');
+            mintNFTBtn.classList.add('hidden');
+            mintLoader.classList.add('hidden');
+            document.querySelector('.mint-section h3').classList.add('hidden');
+            nftTierName.parentElement.classList.add('hidden');
+            
+            mintStatus.innerHTML = `NFT minted successfully! <br/><a href="${explorerUrl}" target="_blank" style="color: var(--primary); text-decoration: underline;">View Transaction</a>`;
+            mintStatus.classList.remove('hidden');
+        } catch (error) {
+            console.error("Minting error:", error);
+            mintStatus.textContent = "Failed to mint NFT: " + error.message;
+        } finally {
+            mintLoader.classList.add('hidden');
+            mintNFTBtn.disabled = false;
+        }
+    }
+    
+    connectWalletBtn.addEventListener('click', async () => {
+        const success = await connectWallet();
+        if (success) {
+            walletSection.style.display = 'none';
+            quizIntro.classList.remove('hidden');
+        }
+    });
+    
+    startWithoutWalletBtn.addEventListener('click', () => {
+        walletSkipped = true;
+        walletSection.style.display = 'none';
+        quizIntro.classList.remove('hidden');
+    });
+    
+    startQuizBtn.addEventListener('click', () => {
+        quizIntro.classList.add('hidden');
+        quizSection.style.display = 'block';
+        initQuiz();
+    });
+    
+    prevBtn.addEventListener('click', () => {
+        loadQuestion(currentQuestion - 1);
+    });
+    
+    nextBtn.addEventListener('click', () => {
+        loadQuestion(currentQuestion + 1);
+    });
+    
+    submitBtn.addEventListener('click', () => {
+        if (userAnswers.includes(null)) {
+            confirmModal.classList.add('active');
+            return;
+        }
+        showResults();
+    });
+    
+    cancelSubmit.addEventListener('click', () => {
+        confirmModal.classList.remove('active');
+    });
+    
+    confirmSubmit.addEventListener('click', () => {
+        confirmModal.classList.remove('active');
+        showResults();
+    });
+    
+    tryAgainBtn.addEventListener('click', () => {
+        resultsSection.style.display = 'none';
+        quizSection.style.display = 'block';
+        questionAnswered = false;
+        nftMinted = false;
+        mintStatus.classList.add('hidden');
+        mintNFTBtn.classList.remove('hidden');
+        badgeEarnedMessage.classList.add('hidden');
+        initQuiz();
+    });
+    
+    connectWalletLaterBtn.addEventListener('click', async () => {
+        const success = await connectWallet();
+        if (success) {
+            showResults();
+        }
+    });
+    
+    mintNFTBtn.addEventListener('click', mintNFT);
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        setupNetworkChangeListener();
+        if (window.ethereum && window.ethereum.selectedAddress) {
+            connectWallet().then(() => {
+                if (walletConnected) {
+                    walletSection.style.display = 'none';
+                    quizIntro.classList.remove('hidden');
+                }
+            });
+        }
+    });
+    </script>
+</body>
+</html>
