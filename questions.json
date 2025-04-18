@@ -1,0 +1,152 @@
+[
+    {
+        "question": "What is Espresso Network primarily focused on?",
+        "options": ["DeFi lending", "Privacy scaling", "Gaming", "NFTs"],
+        "correctAnswer": 1
+    },
+    {
+        "question": "Which consensus mechanism does Espresso Network utilize?",
+        "options": ["Proof of Work", "Proof of Stake", "Proof of Authority", "HotShot Consensus"],
+        "correctAnswer": 3
+    },
+    {
+        "question": "What is the name of Espresso Network’s custom consensus protocol?",
+        "options": ["ColdBrew", "LightBeam", "HotShot", "QuickSync"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "What is the main goal of Espresso’s HotShot protocol?",
+        "options": ["Fast NFT minting", "Cross-chain interoperability", "Scalable consensus", "AI integrations"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "Which company is behind the development of Espresso Network?",
+        "options": ["Meta", "Espresso Systems", "Polygon Labs", "Alchemy"],
+        "correctAnswer": 1
+    },
+    {
+        "question": "How does Espresso Network aim to support rollups?",
+        "options": ["By replacing them", "By funding them", "By decentralizing their sequencers", "By launching its own rollup"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "What is the name of the sequencer coordination protocol Espresso is building?",
+        "options": ["Latte", "Cappuccino", "Karak", "Express"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "What problem does Karak aim to solve?",
+        "options": ["Sequencer centralization", "High gas fees", "Token inflation", "User identity"],
+        "correctAnswer": 0
+    },
+    {
+        "question": "Which layer does Espresso Network primarily operate on?",
+        "options": ["Layer 1", "Layer 2", "Layer 3", "Layer 0"],
+        "correctAnswer": 0
+    },
+    {
+        "question": "Espresso Network is built to support which type of applications?",
+        "options": ["Only DeFi", "Only NFTs", "All Ethereum-based apps", "Only gaming dApps"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "What cryptographic method is central to Espresso Network’s privacy?",
+        "options": ["Ring signatures", "Zero-knowledge proofs", "SHA-256", "Multi-sig"],
+        "correctAnswer": 1
+    },
+    {
+        "question": "Espresso Network integrates with which Ethereum scalability solution?",
+        "options": ["Polygon", "Optimism", "zk-Rollups", "All of the above"],
+        "correctAnswer": 3
+    },
+    {
+        "question": "What does decentralizing sequencers help improve?",
+        "options": ["User experience", "Network security", "Protocol censorship resistance", "All of the above"],
+        "correctAnswer": 3
+    },
+    {
+        "question": "What is one reason rollups use centralized sequencers?",
+        "options": ["They are faster and simpler to deploy", "They are more secure", "They are more expensive", "They reduce adoption"],
+        "correctAnswer": 0
+    },
+    {
+        "question": "Espresso’s approach makes rollups more like what type of blockchains?",
+        "options": ["Sidechains", "Private chains", "L1 blockchains", "Sharded chains"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "What’s a risk of centralized sequencers Espresso is addressing?",
+        "options": ["Smart contract bugs", "MEV extraction", "Censorship", "All of the above"],
+        "correctAnswer": 3
+    },
+    {
+        "question": "What is the key benefit of using HotShot over traditional consensus?",
+        "options": ["Slower finality", "Higher latency", "Fast finality and high throughput", "Lower scalability"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "How does Espresso Network help with MEV issues?",
+        "options": ["By eliminating MEV entirely", "By offering open, fair ordering", "By increasing gas fees", "By removing sequencers"],
+        "correctAnswer": 1
+    },
+    {
+        "question": "What kind of platform is Karak?",
+        "options": ["Decentralized exchange", "Coordination layer for rollup sequencers", "Oracle aggregator", "Data storage layer"],
+        "correctAnswer": 1
+    },
+    {
+        "question": "Who can participate in the HotShot consensus protocol?",
+        "options": ["Only miners", "Only validators with KYC", "Any honest validator", "Only stakers with 1000 ETH"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "Which of these is NOT a component of Espresso Network?",
+        "options": ["HotShot", "Karak", "zkBridge", "Espresso Wallet"],
+        "correctAnswer": 3
+    },
+    {
+        "question": "What type of rollups does Espresso Network aim to support?",
+        "options": ["Only zk-rollups", "Only optimistic rollups", "Any rollup", "Only app-specific rollups"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "Why is decentralization of sequencers important?",
+        "options": ["To reduce gas prices", "To increase transaction fees", "To improve resilience and neutrality", "To simplify deployment"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "What is a sequencer in the context of rollups?",
+        "options": ["A validator", "A gas token", "An ordering service", "A bridge protocol"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "Which of the following does Espresso NOT directly focus on?",
+        "options": ["Privacy", "Scalability", "Smart contract development tools", "Sequencer decentralization"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "Which term best describes Karak's function?",
+        "options": ["Privacy mixer", "Liquidity pool", "Shared sequencing layer", "Mining algorithm"],
+        "correctAnswer": 2
+    },
+    {
+        "question": "What does HotShot aim to scale beyond?",
+        "options": ["PoW mining", "Ethereum L1 throughput", "Rollup compatibility", "EVM gas limits"],
+        "correctAnswer": 1
+    },
+    {
+        "question": "Who benefits most from Espresso’s sequencing solutions?",
+        "options": ["Centralized exchanges", "Rollup developers and users", "NFT collectors", "Web2 companies"],
+        "correctAnswer": 1
+    },
+    {
+        "question": "What makes Espresso’s approach different from traditional L2 solutions?",
+        "options": ["It builds a new language", "It merges consensus and sequencing for multiple rollups", "It removes cryptography", "It is EVM-incompatible"],
+        "correctAnswer": 1
+    },
+    {
+        "question": "What is a long-term goal of Espresso Network?",
+        "options": ["Become a centralized rollup", "Replace Ethereum", "Create a shared, decentralized base layer for rollups", "Abandon the blockchain model"],
+        "correctAnswer": 2
+    }
+]
