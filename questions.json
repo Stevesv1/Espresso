@@ -100,11 +100,6 @@
         "correctAnswer": 2
     },
     {
-        "question": "Which of these is NOT a component of Espresso Network?",
-        "options": ["HotShot", "Karak", "zkBridge", "Espresso Wallet"],
-        "correctAnswer": 3
-    },
-    {
         "question": "What type of rollups does Espresso Network aim to support?",
         "options": ["Only zk-rollups", "Only optimistic rollups", "Any rollup", "Only app-specific rollups"],
         "correctAnswer": 2
